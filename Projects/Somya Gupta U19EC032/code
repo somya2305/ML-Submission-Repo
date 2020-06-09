@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+df=pd.read_csv("train.csv")
+test_df=pd.read_csv("test.csv")
+
+df['has_cabin'] = df["Cabin"].apply(lambda x: 0 if type(x) == float else 1)
+test_df['has_cabin'] = test_df["Cabin"].apply(lambda x: 0 if type(x) == float else 1)
+
+cdf=df[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked','has_cabin','Survived']]
+x=cdf[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked','has_cabin']]
+y=cdf[['Survived']]
+
+x_test=test_df[['Pclass','Sex','Age','SibSp','Parch','Fare','Embarked','has_cabin']]
+
+x['Embarked'] = x['Embarked'].fillna('S')
+x_test['Embarked'] = x_test['Embarked'].fillna('S')
+
+
+from sklearn import preprocessing
+pre=preprocessing.LabelEncoder()
+pre.fit(['female','male'])
+x['Sex']=pre.transform(x['Sex'])
+x_test['Sex']=pre.transform(x_test['Sex'])
+
+pre.fit(['S','C','Q'])
+x['Embarked']=pre.transform(x['Embarked'])
+x_test['Embarked']=pre.transform(x_test['Embarked'])
+
+age_avg = x['Age'].mean()
+age_std = x['Age'].std()
+age_null_count = x['Age'].isnull().sum()
+age_null_random_list = np.random.randint(age_avg - age_std, age_avg + age_std, size=age_null_count)
+x['Age'][np.isnan(x['Age'])] = age_null_random_list
+
+age_avg = x_test['Age'].mean()
+age_std = x_test['Age'].std()
+age_null_count = x_test['Age'].isnull().sum()
+age_null_random_list = np.random.randint(age_avg - age_std, age_avg + age_std, size=age_null_count)
+x_test['Age'][np.isnan(x_test['Age'])] = age_null_random_list
+x_test['Fare'][np.isnan(x_test['Fare'])]=0
+
+from sklearn import preprocessing
+x=preprocessing.scale(x)
+x_test=preprocessing.scale(x_test)
+
+from sklearn.linear_model import LogisticRegression
+log=LogisticRegression(C=0.01, solver='lbfgs')
+log.fit(x,y)
+ypre=log.predict(x)
+from sklearn import metrics
+print("Accuracy of the model in test cases is ",metrics.accuracy_score(y,ypre))
+
+output = pd.DataFrame({ 'PassengerId': test_df['PassengerId'] , 'Survived': yresult})
+output.to_csv('LogisticRegreResult.csv', index=False)
+
