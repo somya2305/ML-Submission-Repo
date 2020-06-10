@@ -49,8 +49,11 @@ from sklearn.linear_model import LogisticRegression
 log=LogisticRegression(C=0.01, solver='lbfgs')
 log.fit(x,y)
 ypre=log.predict(x)
+yresult=log.predict(x_test)
+
 from sklearn import metrics
 print("Accuracy of the model in test cases is ",metrics.accuracy_score(y,ypre))
+print("F1 score of the model in test cases is ",metrics.f1_score(y,pre))
 
 output = pd.DataFrame({ 'PassengerId': test_df['PassengerId'] , 'Survived': yresult})
 output.to_csv('LogisticRegreResult.csv', index=False)
