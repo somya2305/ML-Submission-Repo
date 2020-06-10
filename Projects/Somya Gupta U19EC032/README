@@ -1,0 +1,20 @@
+In the given project we need to classify whether a person lives or not based on the given train and test data.
+The feature set have the following columns-'Pclass','Sex,'Age','SibSp','Parch','Fare','Embarked' and 'has_cabin'. The column ‘has_cabin’
+have the value 1 if the given person has a cabin and 0 if not.
+The given feature set is firstly pre-processed. The ‘Sex’ have value ‘female’ and ‘male’. As numbers are easier to handle thus this data 
+is converted into numeric data by assigning 0 for female and 1 for male. 
+Similarly, the ‘Embarked’ feature set have values ‘S’,’C’ and ‘Q’ which is converted to 0,1 and 2. This is done by using ‘Label Encoder’ 
+in the scikit learn library.
+There are some missing values in the data. The missing values in the AGE feature set are filled with random number between the 
+(mean – standard deviation) and (mean+ standard deviation) so that the missing value do not alter the results much.
+Then all the data is scaled before applying a classification technique.
+I have used logistic regression to classify the data by using ‘lbfgs’ solver as it was giving maximum accuracy among all the solvers of 
+the logistic regression.
+Accuracy of the model in train cases is 0.8114478114478114
+F1 Score of the model in train cases is 0.7341772151898733.
+
+
+Accuracy of the model on kaggle is 0.77511.
+
+ 
+
